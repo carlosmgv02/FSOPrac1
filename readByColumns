@@ -1,0 +1,13 @@
+#! /bin/bash
+while IFS='=' read -r col1 col2 col3
+do
+	echo "col1= $col1"
+	if [ $col1 = "user" ] ; then
+		echo "Yes"
+	fi
+	echo "col2= $col2"
+	echo "col3= $col3"
+	if [ -z $col3 ] ; then
+		echo "Hola"
+	fi
+done <newFile
