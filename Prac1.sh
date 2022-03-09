@@ -24,6 +24,9 @@ Nflag=''
 Fflag=''
 Cflag=''
 Pflag=''
+OFlag=''
+OneFlag=''
+MFlag=''
 
 found='false'
 extraPilotes='false'
@@ -44,6 +47,21 @@ function writeFile
 	n=0
 	echo "$fil $col $portSize"
 	
+}
+function printVariables
+{
+	echo ""
+	echo "VALORES DE LAS VARIABLES:"
+	echo "fils: $fil"
+	echo "cols: $cols"
+	echo "portSize: $portSize"
+	echo "posFilaPal: $posFilaPal"
+	echo "posColPal: $posColPal"
+	echo "midaPaleta: $midaPaleta"
+	echo "posFilaPil: $posFilaPil"
+	echo "posColPil: $posColPil"
+	echo "velFil: $velFil"
+	echo "velCol: $velCol"
 }
 function comprobarValores
 {
@@ -76,10 +94,7 @@ function comprobarValores
 		echo "Prueba"
 	fi
 
-	
 
-
-	
 }
 function comprobarfichero
 {
@@ -141,48 +156,40 @@ function comprobarfichero
 
 function readFromKeyboard
 {
-	read -p "Introduce el nombre del archivo que quieres usar: " file
-	comprobarfichero
+	if [ -z $Nflag ] ; then
+
+		read -p "Introduce el nombre del archivo que quieres usar: " file
+	fi
+	
 #FILAS
-	read -p "Introduce el numero de filas: " fil
-	if [ $fil -lt $minFil ] || [ $fil -gt $maxFil ] ; then
-		echo "El numero introducido es incorrecto, 50 asignado por defecto"
-		let fil=50
-	else
-		echo "Filas asignadas correctamente"
+	if [ -z $Fflag ] ; then
+		read -p "Introduce el numero de filas: " fil
 	fi
 		let maxPort=fil-1
 		#rows output
 		truncate -s-1 file
-		echo -n "$fil " > $file
+		#echo -n "$fil " > $file
 #COLUMNAS
-	read -p "Introduce el numero de columnas: " cols
-	if [ $cols -lt $minCol ] || [ $cols -gt $maxCol ] ; then
-		echo "El numero introducido es incorrecto, 20 asignado por defecto"
-		let cols=20
-	else
-		echo "Columnas asignadas correctamente"
+	if [ -z $Cflag ] ; then
+		read -p "Introduce el numero de columnas: " cols
 	fi
 		#columns output//lo guardamos en el fichero $file
 		truncate -s-1 file
-		echo -n "$cols " >> $file
+		#echo -n "$cols " >> $file
 
 #PORTERIA
-	read -p "Introduce la medida de la porteria: " portSize
-	if [ $portSize -lt $minPort ] || [ $portSize -gt $maxPort ] ; then
-		echo "El numero introducido es incorrecto, fil/2 assignat per defecto"
-		let portSize=fil/2
-	else
-		echo "Medida de la porteria asignada correctamente"
+	if [ -z $Pflag ] ; then
+		read -p "Introduce la medida de la porteria: " portSize
 	fi
 		#output porteria// lo guardamos en el fichero $file
 		truncate -s-1 file
-		readFile
-		echo -n "$portSize" >> $file
+		
+		#echo -n "$portSize" >> $file
+		comprobarValores
 }
-comprobarfichero
-echo $fil
-comprobarValores
+	#comprobarfichero
+
+	#comprobarValores
 echo "BIENVENIDO/A AL PROGRAMA"
 #primero de todo comprobamos que el fichero deseado existe
 #si el fichero existe debemos comprobar que todos los parametros estan en regla
@@ -194,15 +201,18 @@ echo "BIENVENIDO/A AL PROGRAMA"
 while getopts 'n:f:c:p:m:0:1:' opcio; do
 	case "${opcio}" in
 		n) echo "Option  has been chosen" ;Nflag='true'; echo "a= ${OPTARG}";
-			file="${OPTARG}"; readFromKeyboard;;
-		f) echo "Option f has been chosen";Fflag='true';echo "f= ${OPTARG}";;
-		c) echo "Option c has been chosen";Cflag='true'; echo "c= ${OPTARG}";;
-		p) echo "Option p has been chosen";;
-		m) echo "Option m has been chosen";;
-		0)IFS=',';read -a strarr <<< "${OPTARG}";echo "${strarr[0]},${strarr[1]}";;
-		*) error "Unexpected option ${opcio}" ;;
+			file="${OPTARG}";;
+		f) echo "Option f has been chosen";Fflag='true';fil=${OPTARG};echo "f= ${OPTARG}";;
+		c) echo "Option c has been chosen";Cflag='true';cols=${OPTARG}; echo "c= ${OPTARG}";;
+		p) echo "Option p has been chosen";portSize=${OPTARG};Pflag='true';;
+		m) echo "Option m has been chosen";midaPaleta=${OPTARG};MFlag='true';;
+		0)IFS=',';read -a strarr <<< "${OPTARG}";posFilaPal=${strarr[0]};posColPal=${strarr[1]};OFlag='true';;
+		1) echo "1- ${OPTARG}";IFS=',';read -a split <<< "${OPTARG}";posFilaPil=${split[0]};
+			posColPil=${split[1]};velFil=${split[2]};velCol=${split[3]};OneFlag='true';;
+		#*) error "Unexpected option ${opcio}" ;;
 	esac
 done
 shift $(($OPTIND - 1))
 printf "encara ens falta tractar els següents elements: %s\n$* \n"
-
+readFromKeyboard
+printVariables
