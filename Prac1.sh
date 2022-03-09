@@ -1,16 +1,18 @@
 #! /bin/bash
-let fil=0
-let cols=0
-let portSize=0
+fil=0
+cols=0
+portSize=0
 
-let minFil=10
-let maxFil=120
+minFil=10
+maxFil=120
 
-let minCol=8
-let maxCol=36
+minCol=8
+maxCol=36
 
-let minPort=8
-let temp=fil
+minPort=8
+temp=fil
+posFilaPal=0
+posColPal=0
 
 Nflag=''
 Fflag=''
@@ -29,6 +31,12 @@ function readFile
 		echo "portSize= $portSize"
 		exit
 	done < $file
+}
+function writeFile
+{
+	n=0
+	echo "$fil $col $portSize"
+	
 }
 function comprobarfichero
 {
@@ -66,7 +74,7 @@ function readFromKeyboard
 	else
 		echo "Columnas asignadas correctamente"
 	fi
-		#columns output
+		#columns output//lo guardamos en el fichero $file
 		truncate -s-1 file
 		echo -n "$cols " >> $file
 
@@ -78,12 +86,20 @@ function readFromKeyboard
 	else
 		echo "Medida de la porteria asignada correctamente"
 	fi
-		#output porteria
+		#output porteria// lo guardamos en el fichero $file
 		truncate -s-1 file
 		readFile
 		echo -n "$portSize" >> $file
 }
 echo "BIENVENIDO/A AL PROGRAMA"
+#primero de todo comprobamos que el fichero deseado existe
+comprobarfichero
+#si el fichero existe debemos comprobar que todos los parametros estan en regla
+readFile
+#en caso contrario pediremos los parametros que faltan porteclado al usuario
+readFromKeyboard
+
+
 while getopts 'n:f:c:p:m:0:1:' opcio; do
 	case "${opcio}" in
 		n) echo "Option  has been chosen" ;Nflag='true'; echo "a= ${OPTARG}";
@@ -92,7 +108,10 @@ while getopts 'n:f:c:p:m:0:1:' opcio; do
 		c) echo "Option c has been chosen";Cflag='true'; echo "c= ${OPTARG}";;
 		p) echo "Option p has been chosen";;
 		m) echo "Option m has been chosen";;
+		0)IFS=',';read -a strarr <<< "${OPTARG}";echo "${strarr[0]},${strarr[1]}";;
 		*) error "Unexpected option ${opcio}" ;;
 	esac
 done
+shift $(($OPTIND - 1))
+printf "encara ens falta tractar els següents elements: %s\n$* \n"
 
