@@ -99,7 +99,7 @@ function comprobarValores
 function comprobarfichero
 {
 	carlos='carlos'
-	file='/home/milax/FSOPrac1/params.txt'
+	file='/home/milax/Documents/GitHub/FSOPrac1/params.txt'
 	if [ -f $file ] && [ -e $file ]
 	then
 		
@@ -187,8 +187,8 @@ function readFromKeyboard
 		#echo -n "$portSize" >> $file
 		comprobarValores
 }
-	#comprobarfichero
-
+	comprobarfichero
+	readFile
 	#comprobarValores
 echo "BIENVENIDO/A AL PROGRAMA"
 #primero de todo comprobamos que el fichero deseado existe
