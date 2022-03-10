@@ -108,13 +108,19 @@ function comprobarfichero
 		if [ $num -eq 0 ]
 		then
 			fil=`echo $line | cut -d' ' -f1`
+			echo "$fil"
 			cols=`echo $line | cut -d' ' -f2`
+			echo "$cols"
 			portSize=`echo $line | cut -d' ' -f3`
+			echo "$portSize"
 		elif [ $num -eq 1 ]
 		then
 			posFilaPal=`echo $line | cut -d' ' -f1`
+			echo "$posFilaPal"
 			posColPal=`echo $line | cut -d' ' -f2`
+			echo "$posColPal"
 			midaPaleta=`echo $line | cut -d' ' -f3`
+			echo "$midaPaleta"
 
 		elif [ $num -eq 2 ] 
         then
