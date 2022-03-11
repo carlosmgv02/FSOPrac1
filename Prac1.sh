@@ -42,11 +42,37 @@ function readFile
 		exit
 	done < $file
 }
+
 function writeFile
 {
-	n=0
-	echo "$fil $col $portSize"
 	
+	echo "$fil $cols $portSize" > $file
+	echo "$posFilaPal $posColPal $midaPaleta" >> $file
+	echo "$posFilaPil $posColPil $velFil $velCol" >>$file
+	
+
+}
+function introducirRestantes 
+{
+	if [ -z $fil ] || [ -z $cols ] || [ -z $portSize ] ; then
+		read -p "Introduce de nuevo las filas (10,120): " fil
+		read -p "Introduce de nuevo las columnas (10,36): " cols
+		let maxS=fil-1
+		read -p "Introduce de nuevo el tamaño de la portería (8, $maxS): " portSize
+	fi
+
+	if [ -z $posFilaPal ] || [ -z $posColPal ] || [ -z $midaPaleta ] ; then
+		read -p "Introduce de nuevo posFilaPal (1,118): " posFilaPal
+		read -p "Introduce de nuevo posColPal (2,35): " posColPal
+		read -p "Introduce de nuevo midaPaleta (3,$maxS): " midaPaleta
+	fi
+
+	if [ -z $posFilaPil ] || [ -z $posColPil ] || [ -z $velCol] || [ -z $velCol ]; then
+		read -p "Introduce de nuevo posFilaPil (2,118): " posFilaPil
+		read -p "Introduce de nuevo posColPil (2,35): " posColPil
+		read -p "Introduce de nuevo velFil (-1.0-1.0): " velFil
+		read -p "Introduce de nuevo velCol (-1.0-1.0): " velCol
+	fi
 }
 function printVariables
 {
@@ -66,36 +92,36 @@ function printVariables
 function comprobarValores
 {
 	if [ $fil -lt $minFil ] || [ $fil -gt $maxFil ] ; then
-		read -p "Files incorrectes, torna a provar: " fil
+		read -p "Files incorrectes, torna a provar (10-120): " fil
 	fi
 
 	if [ $cols -lt $minCol ] || [ $cols -gt $maxCol ] ; then
-		read -p "Columnes incorrectes, torna a provar: " cols
+		read -p "Columnes incorrectes, torna a provar (10-36): " cols
 	fi
 	if [ $portSize -lt $minPort ] || [ $portSize -gt $maxPort ] ; then
-		read -p "Porteria incorrecta, torna a provar: " portSize
+		read -p "Porteria incorrecta, torna a provar (8-nimFiles-1): " portSize
 	fi
 	if [ $posFilaPal -lt 2 ] || [ $posFilaPal -gt 118 ] ; then
-		read -p "posFilaPal incorrecta, torna a provar: " posFilaPal
+		read -p "posFilaPal incorrecta, torna a provar (2-118): " posFilaPal
 	fi
 	if [ $posColPal -lt 2 ] || [ $posColPal -gt 35 ] ; then
-		read -p "posColPal incorrecta, torna a provar: " posColPal
+		read -p "posColPal incorrecta, torna a provar (2-35): " posColPal
 	fi
 	if [ $midaPaleta -lt 3 ] || [ $midaPaleta -gt $maxPort ] ; then
-		read -p "Mida paleta incorrecta, torna a provar: " midaPaleta
+		read -p "Mida paleta incorrecta, torna a provar (3-numFil-1): " midaPaleta
 	fi
 	if [ $posFilaPil -lt 2 ] || [ $posFilaPil -gt 118 ] ; then
-		read -p "posFilaPil incorrecta, torna a provar: " posFilaPil
+		read -p "posFilaPil incorrecta, torna a provar (2-118): " posFilaPil
 	fi
 	if [ $posColPil -lt 2 ] || [ $posColPil -gt 35 ] ; then
-		read -p "posColPil incorrecta, torna a provar: " posColPil
+		read -p "posColPil incorrecta, torna a provar (2-35): " posColPil
 	fi
-	if [ $velFil -lt -1 ] ; then
+	number=-1.0
+	if (( $(echo "$velFil < $number" |bc -l ) )) ; then
 		echo "Prueba"
 	fi
-
-
 }
+
 function comprobarfichero
 {
 	carlos='carlos'
@@ -132,7 +158,7 @@ function comprobarfichero
             echo "$velFil"
             velCol=`echo $line | cut -d' ' -f4`
             echo "$velCol"
-        
+
 
 		elif [ $num -eq 3 ] && [ ! -z "$line" ]
 		then
@@ -157,8 +183,10 @@ function comprobarfichero
 	else
 		echo "No existe el archivo $file, procedemos a crearlo"
 		touch $file	#si no existe el fichero lo creamos
+
 	fi
 }
+
 
 function readFromKeyboard
 {
@@ -194,8 +222,7 @@ function readFromKeyboard
 		comprobarValores
 }
 	comprobarfichero
-	readFile
-	#comprobarValores
+	#readFile
 echo "BIENVENIDO/A AL PROGRAMA"
 #primero de todo comprobamos que el fichero deseado existe
 #si el fichero existe debemos comprobar que todos los parametros estan en regla
@@ -220,5 +247,14 @@ while getopts 'n:f:c:p:m:0:1:' opcio; do
 done
 shift $(($OPTIND - 1))
 printf "encara ens falta tractar els següents elements: %s\n$* \n"
-readFromKeyboard
+
+comprobarValores
+writeFile
+
+#readFromKeyboard
+introducirRestantes
 printVariables
+
+
+
+
