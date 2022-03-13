@@ -48,7 +48,10 @@ function readFile
 
 function writeFile
 {
+<<<<<<< Updated upstream
 	echo "WRITE FILE"
+=======
+>>>>>>> Stashed changes
 	echo "$fil $cols $portSize" > $file
 	echo "$posFilaPal $posColPal $midaPaleta" >> $file
 	echo "$posFilaPil $posColPil $velFil $velCol" >>$file
@@ -134,7 +137,13 @@ function comprobarValores
 
 function comprobarfichero
 {
+<<<<<<< Updated upstream
 	echo "COMPROBAR FICHERO"
+=======
+	carlos='carlos'
+	#file='/home/milax/Documents/GitHub/FSOPrac1/params.txt'
+	file='/home/milax/FSOPrac1/params.txt'
+>>>>>>> Stashed changes
 	if [ -f $file ] && [ -e $file ]
 	then
 		num=0
