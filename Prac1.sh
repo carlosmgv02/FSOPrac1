@@ -10,6 +10,8 @@ minCol=8
 maxCol=36
 
 minPort=8
+
+minPort=8
 temp=fil
 posFilaPal=0
 posColPal=0
@@ -32,6 +34,7 @@ found='false'
 extraPilotes='false'
 function readFile
 {
+	echo "READ FILE"
 	#falta arreglar, sólo lee si hay 2 líneas en el archivo
 	echo "Entra en 'readFile'"
 	while IFS=' ' read -r fil cols portSize
@@ -45,7 +48,7 @@ function readFile
 
 function writeFile
 {
-	
+	echo "WRITE FILE"
 	echo "$fil $cols $portSize" > $file
 	echo "$posFilaPal $posColPal $midaPaleta" >> $file
 	echo "$posFilaPil $posColPil $velFil $velCol" >>$file
@@ -54,6 +57,7 @@ function writeFile
 }
 function introducirRestantes 
 {
+	echo "INTRODUCIR VALORES RESTANTES"
 	if [ -z $fil ] || [ -z $cols ] || [ -z $portSize ] ; then
 		read -p "Introduce de nuevo las filas (10,120): " fil
 		read -p "Introduce de nuevo las columnas (10,36): " cols
@@ -67,7 +71,7 @@ function introducirRestantes
 		read -p "Introduce de nuevo midaPaleta (3,$maxS): " midaPaleta
 	fi
 
-	if [ -z $posFilaPil ] || [ -z $posColPil ] || [ -z $velCol] || [ -z $velCol ]; then
+	if [ -z $posFilaPil ] || [ -z $posColPil ] || [ -z $velCol ] || [ -z $velCol ]; then
 		read -p "Introduce de nuevo posFilaPil (2,118): " posFilaPil
 		read -p "Introduce de nuevo posColPil (2,35): " posColPil
 		read -p "Introduce de nuevo velFil (-1.0-1.0): " velFil
@@ -76,6 +80,7 @@ function introducirRestantes
 }
 function printVariables
 {
+	
 	echo ""
 	echo "VALORES DE LAS VARIABLES:"
 	echo "fils: $fil"
@@ -91,6 +96,7 @@ function printVariables
 }
 function comprobarValores
 {
+	echo "COMPROBAR VALORES"
 	if [ $fil -lt $minFil ] || [ $fil -gt $maxFil ] ; then
 		read -p "Files incorrectes, torna a provar (10-120): " fil
 	fi
@@ -98,6 +104,7 @@ function comprobarValores
 	if [ $cols -lt $minCol ] || [ $cols -gt $maxCol ] ; then
 		read -p "Columnes incorrectes, torna a provar (10-36): " cols
 	fi
+	let maxPort=fil-1
 	if [ $portSize -lt $minPort ] || [ $portSize -gt $maxPort ] ; then
 		read -p "Porteria incorrecta, torna a provar (8-nimFiles-1): " portSize
 	fi
@@ -116,19 +123,20 @@ function comprobarValores
 	if [ $posColPil -lt 2 ] || [ $posColPil -gt 35 ] ; then
 		read -p "posColPil incorrecta, torna a provar (2-35): " posColPil
 	fi
-	number=-1.0
-	if (( $(echo "$velFil < $number" |bc -l ) )) ; then
-		echo "Prueba"
+	
+	if (( $(echo "${velFil} > 1.0 || ${velFil} < -1.0" | bc -l ) )) ; then
+		read -p "velFil incorrecta,  torna a provar (-1, 1): " velFil
+	fi
+	if (( $(echo "${velCol} > 1.0 || ${velCol} < -1.0" | bc -l ) )) ; then
+		read -p "velCol incorrecta, torna a provar (-1, 1): " velCol
 	fi
 }
 
 function comprobarfichero
 {
-	carlos='carlos'
-	file='/home/milax/Documents/GitHub/FSOPrac1/params.txt'
+	echo "COMPROBAR FICHERO"
 	if [ -f $file ] && [ -e $file ]
 	then
-		
 		num=0
 		while read line; do
 		if [ $num -eq 0 ]
@@ -190,6 +198,7 @@ function comprobarfichero
 
 function readFromKeyboard
 {
+	echo "READ FROM KEYBOARD"
 	if [ -z $Nflag ] ; then
 
 		read -p "Introduce el nombre del archivo que quieres usar: " file
@@ -221,8 +230,8 @@ function readFromKeyboard
 		#echo -n "$portSize" >> $file
 		comprobarValores
 }
-	comprobarfichero
-	#readFile
+	
+	
 echo "BIENVENIDO/A AL PROGRAMA"
 #primero de todo comprobamos que el fichero deseado existe
 #si el fichero existe debemos comprobar que todos los parametros estan en regla
@@ -233,27 +242,28 @@ echo "BIENVENIDO/A AL PROGRAMA"
 
 while getopts 'n:f:c:p:m:0:1:' opcio; do
 	case "${opcio}" in
-		n) echo "Option  has been chosen" ;Nflag='true'; echo "a= ${OPTARG}";
-			file="${OPTARG}";;
-		f) echo "Option f has been chosen";Fflag='true';fil=${OPTARG};echo "f= ${OPTARG}";;
-		c) echo "Option c has been chosen";Cflag='true';cols=${OPTARG}; echo "c= ${OPTARG}";;
+		n) echo "Option n has been chosen" ;Nflag='true';file="${OPTARG}";;
+		f) echo "Option f has been chosen";Fflag='true';fil=${OPTARG};;
+		c) echo "Option c has been chosen";Cflag='true';cols=${OPTARG};;
 		p) echo "Option p has been chosen";portSize=${OPTARG};Pflag='true';;
 		m) echo "Option m has been chosen";midaPaleta=${OPTARG};MFlag='true';;
 		0)IFS=',';read -a strarr <<< "${OPTARG}";posFilaPal=${strarr[0]};posColPal=${strarr[1]};OFlag='true';;
-		1) echo "1- ${OPTARG}";IFS=',';read -a split <<< "${OPTARG}";posFilaPil=${split[0]};
+		1) IFS=',';read -a split <<< "${OPTARG}";posFilaPil=${split[0]};
 			posColPil=${split[1]};velFil=${split[2]};velCol=${split[3]};OneFlag='true';;
 		#*) error "Unexpected option ${opcio}" ;;
 	esac
 done
 shift $(($OPTIND - 1))
+echo "***********************************************"
 printf "encara ens falta tractar els següents elements: %s\n$* \n"
-
+echo "***********************************************";echo""
+comprobarfichero
 comprobarValores
+printVariables
 writeFile
 
 #readFromKeyboard
 introducirRestantes
-printVariables
 
 
 
