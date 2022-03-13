@@ -21,6 +21,10 @@ posFilaPil=0
 posColPil=0
 velFil=0
 velCol=0
+
+#https://www.youtube.com/watch?v=QKtc0KFYteA
+#http://pymotw.com/2/getopt/
+#https://www.youtube.com/watch?v=Gmr41kBp4aI
 def readFile():
     print("READ FILE")
 def writeFile():
