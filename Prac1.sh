@@ -106,7 +106,7 @@ function comprobarValores
 	fi
 	let maxPort=fil-1
 	if [ $portSize -lt $minPort ] || [ $portSize -gt $maxPort ] ; then
-		read -p "Porteria incorrecta, torna a provar (8-nimFiles-1): " portSize
+		read -p "Porteria incorrecta, torna a provar (8-numFiles-1): " portSize
 	fi
 	if [ $posFilaPal -lt 2 ] || [ $posFilaPal -gt 118 ] ; then
 		read -p "posFilaPal incorrecta, torna a provar (2-118): " posFilaPal
