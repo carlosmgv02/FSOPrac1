@@ -20,8 +20,8 @@ minPort=8
 
 minPort=8
 temp=None
-posFilaPal=0
-posColPal=0
+posFilaPal=None
+posColPal=None
 midaPaleta=0
 posFilaPil=0
 posColPil=0
@@ -31,26 +31,26 @@ prueba1=3
 
 def comprobarValores(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol):
     if ((fil > 120 ) or (fil<10)):
-        fil=input("Introdueix les files de nou: " )
-    if ((cols > 36) or (cols<8)):
-        cols=input("Introdueix les columnes de nou: ")
+        fil=input("Introdueix les files de nou (10-120): " )
+    if ((cols > 36) or (cols<10)):
+        cols=input("Introdueix les columnes de nou (10-36): ")
     maxPort=fil-1
     if((portSize>maxPort)or(portSize<8)):
-        portSize=input("Introdueix la mida de la porteria de nou: ")
+        portSize=input("Introdueix la mida de la porteria de nou (8-numFil-1): ")
     if ((posFilaPal<2) or (posFilaPal>118)):
-        posFilaPal=input("Introdueixi la fila on hi ha paleta de nou: ") 
+        posFilaPal=input("Introdueixi la fila on hi ha paleta de nou (2-118): ") 
     if ((posColPal<2) or (posColPal>35)):
-        posColPal=input("Introdueixi la columna on hi ha paleta de nou: ")
+        posColPal=input("Introdueixi la columna on hi ha paleta de nou (2-35): ")
     if ((midaPaleta<2) or (midaPaleta>118)):
-        midaPaleta=input("Introdueixi la mida de la paleta de nou: ")
+        midaPaleta=input("Introdueixi la mida de la paleta de nou (3-numFil-1): ")
     if ((posFilaPil<2) or (posFilaPil>118)):
-        posFilaPil=input("Introdueixi les files on hi ha pilota de nou: ")
+        posFilaPil=input("Introdueixi les files on hi ha pilota de nou (2-118): ")
     if ((posColPil<2) or (posColPil>35)):
-        posColPil=input("Introdueixi es columnes on hi ha pilota de nou: ")
+        posColPil=input("Introdueixi es columnes on hi ha pilota de nou (2-35): ")
     if ((velFil<-1.0) or (velFil>1.0)):
-        velFil=input("Introdueixi la velocitat x de la pilota de nou: ")
-    if ((velCol<2) or (velCol>118)):
-        velCol=input("Introdueixi la velocitat y de la pilota de nou: ")
+        velFil=input("Introdueixi la velocitat x de la pilota de nou (-1, 1): ")
+    if ((velCol<-1.0) or (velCol>1.0)):
+        velCol=input("Introdueixi la velocitat y de la pilota de nou (-1, 1): ")
     
 def readFile(archivo):
     print("READ FILE")
@@ -78,14 +78,16 @@ def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,
 def comprobarFichero(archivo):
     f=None
     print("COMPROBANDO FICHERO...")
-   
     try:
         f = open(archivo)
         print("Hem pogut accedir al fitxer.")
+        return True
     except IOError:
         print("No s'ha pogut obrir el fitxer.")
-    finally:
-        f.close()
+        return False
+    #finally:
+    #    return False
+    #    f.close()
 
 def readFromKeyboard(temp):
     print("READ FROM KEYBOARD")
@@ -94,32 +96,60 @@ def readFromKeyboard(temp):
 
 
 def main():
-    
+    Nflag=None
+    Fflag=None
+    Cflag=None
+    Pflag=None
+    Mflag=None
+    Oflag=None
+    Oneflag=None
     archivo=None
-
+    posFilaPal=None
     args=sys.argv[1:]
     try:
-        opts, args=getopt.getopt(args,"n:f:c:",["arxiu=","files=","columnes="])
+        opts, args=getopt.getopt(args,"n:f:c:p:m:0:1:",["arxiu=","files=","columnes=","porteria=","mida=","zero=","one="])
     except getopt.GetoptError as error_message:
         print(error_message)
         #return False
 
     for opt,arg in opts:
         if opt in ['-n','--arxiu']:
+            Nflag=True
             archivo=arg
             print(archivo)
         elif opt in ['-f','--files']:
+            Fflag=True
             try:
                 fil=int(arg)
                 print(fil)
             except:
                 fil=int(input("Introdueix les files de nou: "))
-        elif opt in ['-c','columnes']:
-            print("prueba")
-    comprobarFichero(archivo)
+        elif opt in ['-c','--columnes']:
+            Cflag=True
+            cols=int(arg)
+        elif opt in ['-p','--porteria']:
+            Pflag=True
+            portSize=int(arg)
+        elif opt in ['m','--mida']:
+            Mflag=True
+            midaPaleta=int(arg)
+        elif opt in ['0','zero']:
+            Oflag=True
+            string=arg.split(',')
+            posFilaPal=string[0]
+            posColPal=string[1]
+            
+    if comprobarFichero(archivo):
+        f=open(archivo)
+    else:
+        f=open(archivo, 'w')
+
+
+    print(posFilaPal)
+        
+
     comprobarValores(150,20,10,20,20,10,20,20,0.5,0.5)
     
 if __name__ == "__main__":
-    #main()
-    readFromKeyboard(prueba1)
-    print(prueba1)
+    main()
+    
