@@ -6,6 +6,7 @@ from os.path import exists
 #https://www.youtube.com/watch?v=QKtc0KFYteA
 #http://pymotw.com/2/getopt/
 #https://www.youtube.com/watch?v=Gmr41kBp4aI
+
 fil=0
 cols=0
 portSize=0
@@ -130,22 +131,19 @@ def main():
         elif opt in ['-p','--porteria']:
             Pflag=True
             portSize=int(arg)
-        elif opt in ['m','--mida']:
+        elif opt in ['-m','--mida']:
             Mflag=True
             midaPaleta=int(arg)
-        elif opt in ['0','zero']:
+        elif opt in ['-0','--zero']:
             Oflag=True
-            string=arg.split(',')
-            posFilaPal=string[0]
-            posColPal=string[1]
+            print("Entra")
+            posFilaPal=arg.split(",")[0]
+            posColPal=arg.split(",")[1]
             
     if comprobarFichero(archivo):
         f=open(archivo)
     else:
         f=open(archivo, 'w')
-
-
-    print(posFilaPal)
         
 
     comprobarValores(150,20,10,20,20,10,20,20,0.5,0.5)
