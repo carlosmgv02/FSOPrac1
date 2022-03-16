@@ -3,9 +3,6 @@ import sys
 import getopt
 import os
 from os.path import exists
-#https://www.youtube.com/watch?v=QKtc0KFYteA
-#http://pymotw.com/2/getopt/
-#https://www.youtube.com/watch?v=Gmr41kBp4aI
 
 fil=0
 cols=0
@@ -153,7 +150,7 @@ def main():
         print("Hi ha hagut un error amb el fitxer")    
         
     index=0
-    print("Comencem a imprimir")
+    print("Comencem a imprimir")s
     
     try: 
         print(archivo)
