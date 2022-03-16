@@ -23,38 +23,44 @@ posColPal=None
 midaPaleta=0
 posFilaPil=0
 posColPil=0
-velFil=0
-velCol=0
+velFil=-2
+velCol=-2
 prueba1=3
 
 def comprobarValores(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol):
+    contador=10
     if ((fil > 120 ) or (fil<10)):
         fil=input("Introdueix les files de nou (10-120): " )
+        contador-=1
     if ((cols > 36) or (cols<10)):
         cols=input("Introdueix les columnes de nou (10-36): ")
+        contador-=1
     maxPort=fil-1
     if((portSize>maxPort)or(portSize<8)):
+        contador-=1
         portSize=input("Introdueix la mida de la porteria de nou (8-numFil-1): ")
     if ((posFilaPal<2) or (posFilaPal>118)):
+        contador-=1
         posFilaPal=input("Introdueixi la fila on hi ha paleta de nou (2-118): ") 
     if ((posColPal<2) or (posColPal>35)):
+        contador-=1
         posColPal=input("Introdueixi la columna on hi ha paleta de nou (2-35): ")
     if ((midaPaleta<2) or (midaPaleta>118)):
+        contador-=1
         midaPaleta=input("Introdueixi la mida de la paleta de nou (3-numFil-1): ")
     if ((posFilaPil<2) or (posFilaPil>118)):
+        contador-=1
         posFilaPil=input("Introdueixi les files on hi ha pilota de nou (2-118): ")
     if ((posColPil<2) or (posColPil>35)):
+        contador-=1
         posColPil=input("Introdueixi es columnes on hi ha pilota de nou (2-35): ")
     if ((velFil<-1.0) or (velFil>1.0)):
+        contador-=1
         velFil=input("Introdueixi la velocitat x de la pilota de nou (-1, 1): ")
     if ((velCol<-1.0) or (velCol>1.0)):
+        contador-=1
         velCol=input("Introdueixi la velocitat y de la pilota de nou (-1, 1): ")
-    
-def writeFile(archivo):
-    print("WRITE FILE")
-    
-def introducirRestantes():
-    print("INTRODUCIR RESTANTES")
+    return contador
 
 def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol):
     print("")
@@ -91,6 +97,15 @@ def readFromKeyboard(temp):
 
 
 def main():
+    fil=0
+    cols=0
+    portSize=0
+    midaPaleta=0
+    posFilaPil=0
+    posColPil=0
+    velFil=-2
+    velCol=-2
+    prueba1=3
     firstCorrect=False
     Nflag=None
     Fflag=None
@@ -102,9 +117,9 @@ def main():
     archivo=None
     posFilaPal=None
     args=sys.argv[1:]
-    arg_list1b=['-n','params312.txt','-f','30']
+    #arg_list1b=['-n','params312.txt','-f','30']
     try:
-        opts, args=getopt.getopt(arg_list1b,"n:f:c:p:m:0:1:",["arxiu=","files=","columnes=","porteria=","mida=","zero=","one="])
+        opts, args=getopt.getopt(args,"n:f:c:p:m:0:1:",["arxiu=","files=","columnes=","porteria=","mida=","zero=","one="])
     except getopt.GetoptError as error_message:
         print(error_message)
         #return False
@@ -113,12 +128,12 @@ def main():
         if opt in ['-n','--arxiu']:
             Nflag=True
             archivo=arg
-            print(archivo)
+            
         elif opt in ['-f','--files']:
             Fflag=True
             try:
                 fil=int(arg)
-                print(fil)
+                
             except:
                 fil=int(input("Introdueix les files de nou: "))
         elif opt in ['-c','--columnes']:
@@ -132,48 +147,117 @@ def main():
             midaPaleta=int(arg)
         elif opt in ['-0','--zero']:
             Oflag=True
-            print("Entra")
-            posFilaPal=arg.split(",")[0]
-            posColPal=arg.split(",")[1]   
-    
-    print(archivo)
-    try:
-        if comprobarFichero(archivo):
-            f=open(archivo)
-            f.close()
-        else:    
-            f=open(archivo, 'w')
-            f.write(fil +" " +cols +" "+ portSize +'\n')
-            f.write(posFilaPal+" "+ posColPal+" "+midaPaleta+'\n')
-            f.write(posFilaPil+" "+posColPil+" "+velFil+velCol+'\n')
-    except (TypeError,IOError):
-        print("Hi ha hagut un error amb el fitxer")    
-        
+            posFilaPal=int(arg.split(",")[0])
+            posColPal=int(arg.split(",")[1])
+        elif opt in ['-1','--one']:
+            Oneflag=True
+            try:
+                posFilaPil=int(arg.split(",")[0])
+                posColPil=int(arg.split(",")[1])
+                velFil=float(arg.split(",")[2])
+                velCol=float(arg.split(",")[3])
+            except:
+                print("Dades incorrectes")    
+    print(Oneflag)
     index=0
-    print("Comencem a imprimir")s
-    
+    print("Comencem a imprimir")
     try: 
         print(archivo)
-        with open(archivo,'r'):
+        f=open(archivo)
+        with f:
+        #with open(archivo,'r'):
             for line in f:
                 if index==0:
-                    
                     line=line.replace('\n','')
-                    
                     string=line.split(" ")
                     if len(string)==3:
                         firstCorrect=True
-                        fil=line.split(" ")[0]
-                        cols=line.split(" ")[1]
-                        portSize=line.split(" ")[2]
+                        fil=int(line.split(" ")[0])
+                        cols=int(line.split(" ")[1])
+                        portSize=int(line.split(" ")[2])
                     else:
-                        print("Falten parametres a la primera linia")
+                        print("Falten parametres a la primera linea:")
+                        fil=0
+                        cols=0
+                        portSize=0
                     print("Fil: "+str(fil)+", col: "+str(cols)+", portsize: "+str(portSize))
-                index=index+1
+                
+                if index==1:
+                    line=line.replace('\n','')
+                    string=line.split(" ")
+                    if len(string)==3:
+                        posFilaPal=int(line.split(" ")[0])
+                        posColPal=int(line.split(" ")[1])
+                        midaPaleta=int(line.split(" ")[2])
+                if index ==2:
+                    line=line.replace('\n','')
+                    
+                    string=line.split(" ")
+                    
+                    if len(string)==4:
+                        posFilaPil=int(line.split(" ")[0])
+                        posColPil=int(line.split(" ")[1])
+                        velFil=float(line.split(" ")[2])
+                        
+                        velCol=float(line.split(" ")[3])
+                index=index+1      
     except Exception as e: 
         print(e)
 
-    comprobarValores(150,20,10,20,20,10,20,20,0.5,0.5)
+    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
+    contador=10
+    correct=0
+    AllCorrect=False
+    if fil==25:
+        print("si")
+    while ((fil > 120 ) or (fil<10)):
+        fil=input("Introdueix les files de nou (10-120): " )
+        contador-=1
+    while ((cols > 36) or (cols<10)):
+        cols=input("Introdueix les columnes de nou (10-36): ")
+        contador-=1
+    maxPort=fil-1
+    while((portSize>maxPort)or(portSize<8)):
+        contador-=1
+        portSize=input("Introdueix la mida de la porteria de nou (8-numFil-1): ")
+    while ((posFilaPal<2) or (posFilaPal>118)):
+        contador-=1
+        posFilaPal=input("Introdueixi la fila on hi ha paleta de nou (2-118): ") 
+    while ((posColPal<2) or (posColPal>35)):
+        contador-=1
+        posColPal=input("Introdueixi la columna on hi ha paleta de nou (2-35): ")
+    while ((midaPaleta<2) or (midaPaleta>118)):
+        contador-=1
+        midaPaleta=input("Introdueixi la mida de la paleta de nou (3-numFil-1): ")
+    while ((posFilaPil<2) or (posFilaPil>118)):
+        contador-=1
+        posFilaPil=input("Introdueixi les files on hi ha pilota de nou (2-118): ")
+    while ((posColPil<2) or (posColPil>35)):
+        contador-=1
+        posColPil=input("Introdueixi es columnes on hi ha pilota de nou (2-35): ")
+    while ((velFil<-1.0) or (velFil>1.0)):
+        contador-=1
+        velFil=input("Introdueixi la velocitat x de la pilota de nou (-1, 1): ")
+    while ((velCol<-1.0) or (velCol>1.0)):
+        contador-=1
+        velCol=input("Introdueixi la velocitat y de la pilota de nou (-1,1): ")
+        
+            
+        
+    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
+    print("archivo: "+archivo)
+    try:
+        #if comprobarFichero(archivo):
+        #    f=open(archivo,'w')
+        #    f.close()
+        #else:    
+            f=open(archivo, 'w')
+            f.write(str(fil) +" " + str(cols) +" "+ str(portSize) +'\n')
+            f.write(str(posFilaPal)+" "+ str(posColPal)+" "+str(midaPaleta)+'\n')
+            f.write(str(posFilaPil)+" "+str(posColPil)+" "+str(velFil)+" "+str(velCol)+'\n')
+    except (TypeError,IOError):
+        print("Hi ha hagut un error amb el fitxer")
+
     
 if __name__ == "__main__":
     main()
