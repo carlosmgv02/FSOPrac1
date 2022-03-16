@@ -53,9 +53,6 @@ def comprobarValores(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPi
     if ((velCol<-1.0) or (velCol>1.0)):
         velCol=input("Introdueixi la velocitat y de la pilota de nou (-1, 1): ")
     
-def readFile(archivo):
-    print("READ FILE")
-
 def writeFile(archivo):
     print("WRITE FILE")
     
@@ -83,7 +80,7 @@ def comprobarFichero(archivo):
         f = open(archivo)
         print("Hem pogut accedir al fitxer.")
         return True
-    except IOError:
+    except (IOError, TypeError):
         print("No s'ha pogut obrir el fitxer.")
         return False
     #finally:
@@ -97,6 +94,7 @@ def readFromKeyboard(temp):
 
 
 def main():
+    firstCorrect=False
     Nflag=None
     Fflag=None
     Cflag=None
@@ -107,12 +105,13 @@ def main():
     archivo=None
     posFilaPal=None
     args=sys.argv[1:]
+    arg_list1b=['-n','params312.txt','-f','30']
     try:
-        opts, args=getopt.getopt(args,"n:f:c:p:m:0:1:",["arxiu=","files=","columnes=","porteria=","mida=","zero=","one="])
+        opts, args=getopt.getopt(arg_list1b,"n:f:c:p:m:0:1:",["arxiu=","files=","columnes=","porteria=","mida=","zero=","one="])
     except getopt.GetoptError as error_message:
         print(error_message)
         #return False
-
+    
     for opt,arg in opts:
         if opt in ['-n','--arxiu']:
             Nflag=True
@@ -138,13 +137,44 @@ def main():
             Oflag=True
             print("Entra")
             posFilaPal=arg.split(",")[0]
-            posColPal=arg.split(",")[1]
-            
-    if comprobarFichero(archivo):
-        f=open(archivo)
-    else:
-        f=open(archivo, 'w')
+            posColPal=arg.split(",")[1]   
+    
+    print(archivo)
+    try:
+        if comprobarFichero(archivo):
+            f=open(archivo)
+            f.close()
+        else:    
+            f=open(archivo, 'w')
+            f.write(fil +" " +cols +" "+ portSize +'\n')
+            f.write(posFilaPal+" "+ posColPal+" "+midaPaleta+'\n')
+            f.write(posFilaPil+" "+posColPil+" "+velFil+velCol+'\n')
+    except (TypeError,IOError):
+        print("Hi ha hagut un error amb el fitxer")    
         
+    index=0
+    print("Comencem a imprimir")
+    
+    try: 
+        print(archivo)
+        with open(archivo,'r'):
+            for line in f:
+                if index==0:
+                    
+                    line=line.replace('\n','')
+                    
+                    string=line.split(" ")
+                    if len(string)==3:
+                        firstCorrect=True
+                        fil=line.split(" ")[0]
+                        cols=line.split(" ")[1]
+                        portSize=line.split(" ")[2]
+                    else:
+                        print("Falten parametres a la primera linia")
+                    print("Fil: "+str(fil)+", col: "+str(cols)+", portsize: "+str(portSize))
+                index=index+1
+    except Exception as e: 
+        print(e)
 
     comprobarValores(150,20,10,20,20,10,20,20,0.5,0.5)
     
