@@ -274,10 +274,14 @@ def main():
             f.write(str(posFilaPal)+" "+ str(posColPal)+" "+str(midaPaleta)+'\n')
             f.write(str(posFilaPil)+" "+str(posColPil)+" "+str(velFil)+" "+str(velCol)+'\n')
             for i in range(len(array1)):
+                first=True
                 for j in range(len(array1[i])):
+                    if first==False:
+                        f.write(" ")
                     f.write(str(array1[i][j]))
+                    first=False
                 f.write('\n')
-            f.write("array: "+str(array1[1]))
+            
             if len(args)!=0:
 
                     print("Hem afegit pilotes extra a l'arxiu")
