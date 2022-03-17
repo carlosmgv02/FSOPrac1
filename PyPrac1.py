@@ -62,7 +62,7 @@ def comprobarValores(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPi
         velCol=input("Introdueixi la velocitat y de la pilota de nou (-1, 1): ")
     return contador
 
-def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol):
+def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol,array1):
     print("")
     print("PRINT VARIABLES")
     print("files:" + str(fil))
@@ -75,7 +75,8 @@ def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,
     print("posColPil:" + str(posColPil))
     print("velFil:" + str(velFil))
     print("velCol:" + str(velCol))
-    
+    for i in range(len(array1)):
+        print("Pilota "+str(i)+": "+str(array1[i]))
 def comprobarFichero(archivo):
     f=None
     print("COMPROBANDO FICHERO...")
@@ -220,7 +221,7 @@ def main():
         print(e)
     print("length is : "+str(len(array1[0])))
     try:
-        printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
+        printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol,array1)
     except UnboundLocalError:
         print("Els parametres a imprimir encara no tenen valors")
     contador=10
@@ -262,8 +263,8 @@ def main():
         
             
         
-    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
-    print("archivo: "+archivo)
+    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol,array1)
+    
     try:
         #if comprobarFichero(archivo):
         #    f=open(archivo,'w')
