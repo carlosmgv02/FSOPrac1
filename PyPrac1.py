@@ -75,6 +75,7 @@ def printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,
     print("posColPil:" + str(posColPil))
     print("velFil:" + str(velFil))
     print("velCol:" + str(velCol))
+    
     for i in range(len(array1)):
         print("Pilota "+str(i)+": "+str(array1[i]))
 def comprobarFichero(archivo):
@@ -130,7 +131,7 @@ def main():
     except getopt.GetoptError as error_message:
         print(error_message)
         #return False
-    
+    array1=[]
     for opt,arg in opts:
         if opt in ['-n','--arxiu']:
             Nflag=True
@@ -158,7 +159,13 @@ def main():
         elif opt in ['-1','--one']:
             Oneflag=True
             try:
-                    
+                i=0
+                while (i<8) and (i<len(args)):
+                    array1.append(args[i].split(","))
+                    #print(array1)
+                    i+=1
+                
+                #print("data: "+str(arg.split(" ")))
                 posFilaPil=int(arg.split(",")[0])
                 posColPil=int(arg.split(",")[1])
                 velFil=float(arg.split(",")[2])
@@ -169,13 +176,14 @@ def main():
                 print("Dades incorrectes")
     if Nflag==None:
         archivo=raw_input("Introdueix el nom de l`arxiu: ") 
-    print(archivo)   
+   
+
     comprobarFichero(archivo)
     index=0
     print("Comencem a imprimir")
-    array1=[]
+    
     try: 
-        print(archivo)
+        
         f=open(archivo)
         with f:
         #with open(archivo,'r'):
@@ -193,7 +201,7 @@ def main():
                         fil=0
                         cols=0
                         portSize=0
-                    print("Fil: "+str(fil)+", col: "+str(cols)+", portsize: "+str(portSize))
+                    #print("Fil: "+str(fil)+", col: "+str(cols)+", portsize: "+str(portSize))
                 
                 if index==1:
                     line=line.replace('\n','')
@@ -215,15 +223,16 @@ def main():
                     line=line.replace('\n','')
                     string=line.split(" ")
                     if len(string)!=0:
+                        
                         array1.append(string)
                 index=index+1      
     except Exception as e: 
         print(e)
-    print("length is : "+str(len(array1[0])))
-    try:
-        printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol,array1)
-    except UnboundLocalError:
-        print("Els parametres a imprimir encara no tenen valors")
+    #print("length is : "+str(len(array1[0])))
+    #try:
+    #    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol,array1)
+    #except UnboundLocalError:
+    #    print("Els parametres a imprimir encara no tenen valors")
     contador=10
     correct=0
     AllCorrect=False
