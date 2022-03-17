@@ -84,6 +84,7 @@ def comprobarFichero(archivo):
         print("Hem pogut accedir al fitxer.")
         return True
     except (IOError, TypeError):
+        f=open(archivo,'w')
         print("No s'ha pogut obrir el fitxer.")
         return False
     #finally:
@@ -97,15 +98,20 @@ def readFromKeyboard(temp):
 
 
 def main():
+    
     fil=0
     cols=0
     portSize=0
     midaPaleta=0
     posFilaPil=0
     posColPil=0
+    posColPal=0
+    posFilaPal=0
     velFil=-2
     velCol=-2
-    prueba1=3
+    pilotes=None
+    i=0
+    #prueba1=3
     firstCorrect=False
     Nflag=None
     Fflag=None
@@ -132,8 +138,7 @@ def main():
         elif opt in ['-f','--files']:
             Fflag=True
             try:
-                fil=int(arg)
-                
+                fil=int(arg)  
             except:
                 fil=int(input("Introdueix les files de nou: "))
         elif opt in ['-c','--columnes']:
@@ -152,15 +157,22 @@ def main():
         elif opt in ['-1','--one']:
             Oneflag=True
             try:
+                    
                 posFilaPil=int(arg.split(",")[0])
                 posColPil=int(arg.split(",")[1])
                 velFil=float(arg.split(",")[2])
                 velCol=float(arg.split(",")[3])
-            except:
-                print("Dades incorrectes")    
-    print(Oneflag)
+                #print("llega"+ string)
+            except Exception as e:
+                print(e)
+                print("Dades incorrectes")
+    if Nflag==None:
+        archivo=raw_input("Introdueix el nom de l`arxiu: ") 
+    print(archivo)   
+    comprobarFichero(archivo)
     index=0
     print("Comencem a imprimir")
+    array1=[]
     try: 
         print(archivo)
         f=open(archivo)
@@ -189,22 +201,28 @@ def main():
                         posFilaPal=int(line.split(" ")[0])
                         posColPal=int(line.split(" ")[1])
                         midaPaleta=int(line.split(" ")[2])
-                if index ==2:
+                if index == 2:
                     line=line.replace('\n','')
-                    
                     string=line.split(" ")
                     
                     if len(string)==4:
                         posFilaPil=int(line.split(" ")[0])
                         posColPil=int(line.split(" ")[1])
                         velFil=float(line.split(" ")[2])
-                        
                         velCol=float(line.split(" ")[3])
+                if (index>2) and (index<8):
+                    line=line.replace('\n','')
+                    string=line.split(" ")
+                    if len(string)!=0:
+                        array1.append(string)
                 index=index+1      
     except Exception as e: 
         print(e)
-
-    printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
+    print("length is : "+str(len(array1[0])))
+    try:
+        printVariables(fil,cols,portSize,posFilaPal,posColPal,midaPaleta,posFilaPil,posColPil,velFil,velCol)
+    except UnboundLocalError:
+        print("Els parametres a imprimir encara no tenen valors")
     contador=10
     correct=0
     AllCorrect=False
@@ -234,7 +252,7 @@ def main():
         posFilaPil=input("Introdueixi les files on hi ha pilota de nou (2-118): ")
     while ((posColPil<2) or (posColPil>35)):
         contador-=1
-        posColPil=input("Introdueixi es columnes on hi ha pilota de nou (2-35): ")
+        posColPil=input("Introdueixi les columnes on hi ha pilota de nou (2-35): ")
     while ((velFil<-1.0) or (velFil>1.0)):
         contador-=1
         velFil=input("Introdueixi la velocitat x de la pilota de nou (-1, 1): ")
@@ -255,6 +273,16 @@ def main():
             f.write(str(fil) +" " + str(cols) +" "+ str(portSize) +'\n')
             f.write(str(posFilaPal)+" "+ str(posColPal)+" "+str(midaPaleta)+'\n')
             f.write(str(posFilaPil)+" "+str(posColPil)+" "+str(velFil)+" "+str(velCol)+'\n')
+            for i in range(len(array1)):
+                for j in range(len(array1[i])):
+                    f.write(str(array1[i][j]))
+                f.write('\n')
+            f.write("array: "+str(array1[1]))
+            if len(args)!=0:
+
+                    print("Hem afegit pilotes extra a l'arxiu")
+                    string=args[0].split(",")
+                    #f.write(string[1]+" "+string[2]+" "+string[3]+" "+string[4])
     except (TypeError,IOError):
         print("Hi ha hagut un error amb el fitxer")
 

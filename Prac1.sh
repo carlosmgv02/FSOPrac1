@@ -8,7 +8,7 @@ maxFil=120
 
 minCol=8
 maxCol=36
-
+midaPaleta=0
 minPort=8
 
 minPort=8
@@ -68,6 +68,7 @@ function introducirRestantes
 	if [ -z $posFilaPal ] || [ -z $posColPal ] || [ -z $midaPaleta ] ; then
 		read -p "Introduce de nuevo posFilaPal (1,118): " posFilaPal
 		read -p "Introduce de nuevo posColPal (2,35): " posColPal
+		let maxS=fil-1
 		read -p "Introduce de nuevo midaPaleta (3,$maxS): " midaPaleta
 	fi
 
@@ -97,6 +98,9 @@ function printVariables
 function comprobarValores
 {
 	echo "COMPROBAR VALORES"
+	if [ -z $file ] ; then
+		read -p "Introdueix el nom del fitxer: " file
+	fi
 	if [ $fil -lt $minFil ] || [ $fil -gt $maxFil ] ; then
 		read -p "Files incorrectes, torna a provar (10-120): " fil
 	fi
@@ -137,7 +141,7 @@ function comprobarfichero
 	echo "COMPROBAR FICHERO"
 
 	carlos='carlos'
-	file='/home/milax/Documents/GitHub/FSOPrac1/params.txt'
+	#file='/home/milax/Documents/GitHub/FSOPrac1/params.txt'
 	#file='/home/milax/FSOPrac1/params.txt'
 
 	if [ -f $file ] && [ -e $file ]
@@ -253,11 +257,12 @@ while getopts 'n:f:c:p:m:0:1:' opcio; do
 		p) echo "Option p has been chosen";portSize=${OPTARG};Pflag='true';;
 		m) echo "Option m has been chosen";midaPaleta=${OPTARG};MFlag='true';;
 		0)IFS=',';read -a strarr <<< "${OPTARG}";posFilaPal=${strarr[0]};posColPal=${strarr[1]};OFlag='true';;
-		1) IFS=',';read -a split <<< "${OPTARG}";posFilaPil=${split[0]};
+		1) echo ${OPTARG};IFS=',';read -a split <<< "${OPTARG}";posFilaPil=${split[0]};
 			posColPil=${split[1]};velFil=${split[2]};velCol=${split[3]};OneFlag='true';;
 		#*) error "Unexpected option ${opcio}" ;;
 	esac
 done
+
 shift $(($OPTIND - 1))
 echo "***********************************************"
 printf "encara ens falta tractar els següents elements: %s\n$* \n"
@@ -265,10 +270,14 @@ echo "***********************************************";echo""
 comprobarfichero
 comprobarValores
 printVariables
+introducirRestantes
 writeFile
+IFS=',';read -a separar <<< "$1";
+if [ ${#distro[@]} -eq 3 ] ; then
+	echo "${separar[0]} ${separar[1]} ${separar[2]} ${separar[3]}" >$file
+fi
 
 #readFromKeyboard
-introducirRestantes
 
 
 
